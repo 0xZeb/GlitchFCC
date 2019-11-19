@@ -31,7 +31,8 @@ app.get("/api/timestamp/", (req, res)=> {
 
 app.get("/api/timestamp/:date_string?", (req, res) => {
   var timeString = req.params.date_string;
-  console.log(timeString);
+  res.json({unix: Date.valueOf(timeString), 
+           utc: Date.toUTCString(timeString)})
   
 })
 
