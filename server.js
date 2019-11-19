@@ -25,7 +25,9 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/", (req, res)=> {
-  res.json({ unix: Date() });
+  var utcTime = new Date().now;
+  res.json({ unix: Date(), utc: utcTime });
+  
 })
 
 
