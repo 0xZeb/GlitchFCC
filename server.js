@@ -33,7 +33,9 @@ app.get("/api/timestamp/:date_string?", (req, res) => {
   var timeString = req.params.date_string;
   //operate on timeString for validation
   
-  if(/\d{5,}/.test(timeString)){
+  var validInput = new RegExp(/\d{5,}/);
+  
+  if(validInput.test(timeString)){
     var dateInt = parseInt(timeString);
     res.json({unix: timeString, utc: new Date(dateInt).toUTCString()})
   }
