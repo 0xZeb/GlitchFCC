@@ -31,7 +31,7 @@ app.get("/api/timestamp/", (req, res)=> {
 
 app.get("/api/timestamp/:date_string?", (req, res) => {
   var timeString = req.params.date_string;
-  //operate on 
+  //operate on timeString for validation
   
  
   
