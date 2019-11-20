@@ -33,7 +33,7 @@ app.get("/api/timestamp/:date_string?", (req, res) => {
   var timeString = req.params.date_string;
   //operate on timeString for validation
   
-  
+  res.json({unix: timeString.getTime()});
  
   
   
