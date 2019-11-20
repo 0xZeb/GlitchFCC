@@ -31,13 +31,9 @@ app.get("/api/timestamp/", (req, res)=> {
 
 app.get("/api/timestamp/:date_string?", (req, res) => {
   var timeString = req.params.date_string;
-  if(timeString === ""){
-    
-  }
+  //operate on 
   
-  res.json({unix: timeString.valueOf(timeString), 
-           utc: timeString.toUTCString(timeString)})
-  
+ 
   
   
   
