@@ -24,34 +24,17 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/timestamp/", (req, res)=> {
-  var utcTime = Date();
-  res.json({ unix: Date(), utc: utcTime });  
-})
-
-app.get("/api/timestamp/:date_string?", (req, res) => {
-  var timeString = req.params.date_string;
-  //operate on timeString for validation
+app.get("/api/whoami", (req, res) => {
   
-  var validInput = new RegExp(/\d{5,}/);
-  
-  if(validInput.test(timeString)){
-    var dateInt = parseInt(timeString);
-    res.json({unix: timeString, utc: new Date(dateInt).toUTCString()})
-  }
-  
-  let dateObj = new Date(timeString);
-  
-  if(!dateObj.toString() === "Invalid Date"){
-    res.json({unix: timeString, utc: dateObj.toUTCString()});
-  } else {
-    res.json({error: "Invalid Date"});      
-  }
+  //console.log(req.rawHeaders);
+  //rawHeaders is an array '[n]' to access
+  let ipAddy = req.rawHeaders[3].slice(0,15); //+
+  let lingoType = req.rawHeaders[req.rawHeaders.length -3];
+  let softwareType = req.rawHeaders[13];
   
   
-  
-})
-
+  res.json({ipaddress: ipAddy , language: lingoType, software: softwareType});
+});
 
 
 // listen for requests :)
