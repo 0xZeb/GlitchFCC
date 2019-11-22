@@ -1,43 +1,77 @@
-// server.js
-// where your node app starts
+'use strict';
 
-// init project
 var express = require('express');
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+
+var cors = require('cors');
+
 var app = express();
 
-// enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
-var cors = require('cors');
-app.use(cors({optionSuccessStatus: 200}));  // some legacy browsers choke on 204
+// Basic Configuration 
+var port = process.env.PORT || 3000;
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+/** this project needs a db !! **/ 
+// mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGO_URI, { 
+      useUnifiedTopology: true, 
+      useNewUrlParser: true });
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+console.log("readyState " + mongoose.connection.readyState);
+/* codes for mongoose.connection.readyState~~
+0: disconnected
+1: connected
+2: connecting
+3: disconnecting
+*/
+
+app.use(cors());
+
+
+/** this project needs to parse POST bodies **/
+// you should mount the body-parser here
+app.use(bodyParser.urlencoded({extended: false})); 
+
+app.use('/public', express.static(process.cwd() + '/public'));
+
+app.get('/', function(req, res){
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
-
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.post("/api/shorturl/new", (req, res) => {
+  console.log(req.body);
 });
 
-app.get("/api/whoami", (req, res) => {
+/*
+
+*/
+var URLshrinkerSchema = new mongoose.Schema({
+  url: String 
+});
+
+var LongURL = mongoose.model('LongURL', URLshrinkerSchema);
+
+var createAndSaveURL = function(URL, done){
+  var createdURL = new  LongURL({url: URL});
   
-  //console.log(req.rawHeaders);
-  //rawHeaders is an array '[n]' to access
-  let ipAddy = req.rawHeaders[3].slice(0,15); //+
-  let lingoType = req.rawHeaders[req.rawHeaders.length -3];
-  let softwareType = req.rawHeaders[13];
-  
-  
-  res.json({ipaddress: ipAddy , language: lingoType, software: softwareType});
+  createAndSaveURL.save(function(err, data){
+    if(err) return console.error(err);
+    done(null, data);
+  })
+}
+
+
+
+
+
+
+
+app.listen(port, function () {
+  console.log('Node.js listening ...');
 });
 
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+
